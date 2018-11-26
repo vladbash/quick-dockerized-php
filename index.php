@@ -13,10 +13,30 @@ echo '<select name="symbol">';
 foreach ($symbols as $sym) {
     echo '<option val="' . $sym . '">' . $sym . '</option>';
 }
-
 echo '</select>';
-echo '<input type="submit"></form>';
-$intervals = array("1h", "30m", "15m", "5m", "1m");
+echo '<br><input type="checkbox" value="true" '.($_GET["int1h"] === 'true' ? 'checked' : '').' name="int1h"> 1h';
+echo '<br><input type="checkbox" value="true" '.($_GET["int30m"] === 'true' ? 'checked' : '').' name="int30m"> 30m';
+echo '<br><input type="checkbox" value="true" '.($_GET["int15m"] === 'true' ? 'checked' : '').' name="int15m"> 15m';
+echo '<br><input type="checkbox" value="true" '.($_GET["int5m"] === 'true' ? 'checked' : '').' name="int5m"> 5m';
+echo '<br><input type="checkbox" value="true" '.($_GET["int1m"] === 'true' ? 'checked' : '').' name="int1m"> 1m';
+echo '<br><input type="submit"></form>';
+// $intervals = array("1h", "30m", "15m", "5m", "1m");
+$intervals = array();
+if ($_GET["int1h"] === 'true') {
+    array_push($intervals, "1h");
+}
+if ($_GET["int30m"] === 'true') {
+    array_push($intervals, "30m");
+}
+if ($_GET["int15m"] === 'true') {
+    array_push($intervals, "15m");
+}
+if ($_GET["int5m"] === 'true') {
+    array_push($intervals, "5m");
+}
+if ($_GET["int1m"] === 'true') {
+    array_push($intervals, "1m");
+}
 if ($_GET["symbol"] != "") {
     echo $_GET["symbol"] . "<br>";
 }
@@ -29,6 +49,10 @@ foreach ($intervals as $int) {
         echo "file " . $filename . " exists. Skipping.<br>";
         continue;
     }
+    calculate_inteval($int, $filename);
+}
+
+function calculate_inteval($int, $filename ) {
     $ts_ms = round(microtime(true) * 1000); //current GMT UNIX time in miliseconds
     $qty = 10;
     $ts_last = 1483243199000; //1.1.2017 milisec
